@@ -16,6 +16,7 @@ import javax.lang.model.element.VariableElement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -63,5 +64,33 @@ public class UserController {
     public Result<Integer> addUser(){
         int i = jdbcTemplate.update("insert into user(name,age,gender,email) values(?,?,?,?)","zhaoliu",21,"女","123456@gmail.com");
         return Result.ok(i);
+    }
+
+    // 根据 id 删除
+    @RequestMapping("/delete")
+    public Result<Integer> delUserById(String id){
+        int i = jdbcTemplate.update("delete from user where id = ?", id);
+        return Result.ok(i);
+    }
+
+    // 根据 id 修改 name
+    @RequestMapping("/updateUserById")
+    public Result<Integer> updateUserById(String id, @RequestParam("name") String newName){
+        int i = jdbcTemplate.update("update user set name = ? where id = ?", newName, id);
+        return Result.ok(i);
+    }
+
+    // 根据 id 查询
+    @RequestMapping("/getById")
+    public Result<List<Map<String, Object>>> getById(String id){
+        List<Map<String, Object>> l = jdbcTemplate.queryForList("select * from user where id > ?", id);
+        return Result.ok(l);
+    }
+
+    // 统计男女各有多少人
+    @RequestMapping("/getByGender")
+    public Result<List<Map<String, Object>>> getByGender(){
+        List<Map<String, Object>> l = jdbcTemplate.queryForList("select gender as '性别',count(gender) as '人数' from user group by gender");
+        return Result.ok(l);
     }
 }
