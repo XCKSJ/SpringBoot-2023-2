@@ -1,6 +1,5 @@
 package com.course.springboot2.controller;
 
-import com.course.springboot2.config.CommonConstant;
 import com.course.springboot2.domain.Result;
 import com.course.springboot2.domain.User;
 import com.course.springboot2.service.UserService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.lang.model.element.VariableElement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
