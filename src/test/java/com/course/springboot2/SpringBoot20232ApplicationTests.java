@@ -72,4 +72,9 @@ class SpringBoot20232ApplicationTests {
         List<User> l = userMapper.selectBatchIds(idList);
     }
 
+    @Test
+    public void testLogicDel(){
+        userMapper.deleteById(5);
+    }
+
 }
