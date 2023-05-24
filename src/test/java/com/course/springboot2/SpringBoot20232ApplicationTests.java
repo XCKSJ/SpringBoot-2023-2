@@ -132,4 +132,19 @@ class SpringBoot20232ApplicationTests {
         userMapper.update(u, queryWrapper);
     }
 
+    // 根据条件 修改数据
+    @Test
+    public void testQueryWrapper5(){
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("name", "a")
+                .and(i -> i.gt("age", 20).or().isNull("email"));
+
+        // 使用 mapper 中的方法，修改数据
+        User user = new User();
+        user.setAge(18);
+        user.setEmail("user@atguigu.com");
+        int result = userMapper.update(user, queryWrapper);
+        System.out.println("受影响的行数：" + result);
+    }
+
 }
