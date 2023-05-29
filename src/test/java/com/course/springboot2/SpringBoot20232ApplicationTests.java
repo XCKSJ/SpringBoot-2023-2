@@ -1,9 +1,13 @@
 package com.course.springboot2;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.course.springboot2.domain.User;
 import com.course.springboot2.mapper.UserMapper;
+import com.course.springboot2.service.UserMyBatisService;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -15,6 +19,9 @@ import java.util.List;
 class SpringBoot20232ApplicationTests {
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    UserMyBatisService userMyBatisService;
 
     // 查询所有用户
     @Test
@@ -145,6 +152,78 @@ class SpringBoot20232ApplicationTests {
         user.setEmail("user@atguigu.com");
         int result = userMapper.update(user, queryWrapper);
         System.out.println("受影响的行数：" + result);
+    }
+
+    // 查询 id <= 3 的用户信息，采用子查询
+    @Test
+    public void testInSqlWrapper(){
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.inSql("id", "select id from t_user where id <= 3");
+
+        List<User> l = userMapper.selectList(queryWrapper);
+
+        l.forEach(x -> System.out.println(x));
+    }
+
+    // 修改（年龄大于20或邮箱为空）并且用户名中含有a的用户信息
+    @Test
+    public void testUpdateWrapper6(){
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        // 1.wrapper 中带 set 方法，不需要定义实体对象
+        updateWrapper.like("name", "a")
+                .and(i -> i.gt("age", 20).or().isNull("email"));
+
+        User u = new User();
+        u.setName("王语嫣");
+
+        int r = userMapper.update(u, updateWrapper);
+
+        System.out.println("本次修改记录条数：" + r);
+    }
+
+    // 判断查询条件是否存在来加入条件
+    @Test
+    public void testCondQueryWrapper7(){
+        String username = "a";
+        String ageBegin = "10";
+        String ageEnd = "30";
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+
+        // StringUtils.isNotBlank() 判断字符串是否为空
+        queryWrapper.like(StringUtils.isNotBlank(username), "name", username)
+                .ge(StringUtils.isNotBlank(ageBegin), "age", ageBegin)
+                .le(StringUtils.isNotBlank(ageEnd), "age", ageEnd);
+
+        List<User> l = userMapper.selectList(queryWrapper);
+
+        l.forEach(x -> System.out.println(x));
+    }
+
+    // 采用 Lambda 形式
+    @Test
+    public void testLambdaCondQueryWrapper7(){
+        String username = "a";
+        String ageBegin = "10";
+        String ageEnd = "30";
+
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+
+        // StringUtils.isNotBlank() 判断字符串是否为空
+        queryWrapper.like(StringUtils.isNotBlank(username), User::getName, username)
+                .ge(StringUtils.isNotBlank(ageBegin), User::getAge, ageBegin)
+                .le(StringUtils.isNotBlank(ageEnd), User::getAge, ageEnd);
+
+        List<User> l = userMapper.selectList(queryWrapper);
+
+        l.forEach(x -> System.out.println(x));
+    }
+
+    // 使用 IService
+    @Test
+    public void testService1(){
+        List<User> l = userMyBatisService.list();
+        l.forEach(x -> System.out.println(x));
     }
 
 }
