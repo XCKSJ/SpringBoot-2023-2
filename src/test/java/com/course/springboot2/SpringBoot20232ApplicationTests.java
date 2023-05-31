@@ -3,6 +3,7 @@ package com.course.springboot2;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.course.springboot2.domain.User;
 import com.course.springboot2.mapper.UserMapper;
 import com.course.springboot2.service.UserMyBatisService;
@@ -224,6 +225,21 @@ class SpringBoot20232ApplicationTests {
     public void testService1(){
         List<User> l = userMyBatisService.list();
         l.forEach(x -> System.out.println(x));
+    }
+
+    // 分页查询
+    @Test
+    public void testPageQuery9(){
+        Page<User> page = userMyBatisService.page(new Page<>(1, 4));
+        List<User> l = page.getRecords();
+        l.forEach(x -> System.out.println(x));
+
+        System.out.println("当前页：" + page.getCurrent());
+        System.out.println("每页显示的条数：" + page.getSize());
+        System.out.println("总记录数：" + page.getTotal());
+        System.out.println("总页数：" + page.getPages());
+        System.out.println("是否有上一页：" + page.hasPrevious());
+        System.out.println("是否有下一页：" + page.hasNext());
     }
 
 }
