@@ -1,7 +1,10 @@
 package com.course.springboot2.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.course.springboot2.domain.Result;
 import com.course.springboot2.domain.User;
+import com.course.springboot2.service.UserMyBatisService;
 import com.course.springboot2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +26,9 @@ import java.util.Map;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserMyBatisService userMyBatisService;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -90,5 +96,13 @@ public class UserController {
     public Result<List<Map<String, Object>>> getByGender(){
         List<Map<String, Object>> l = jdbcTemplate.queryForList("select gender as '性别',count(gender) as '人数' from user group by gender");
         return Result.ok(l);
+    }
+
+    @RequestMapping("/userPage")
+    public Result<Page<User>> userPageBySearch(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+                                   @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                   @RequestParam(value = "search", defaultValue = " ") String search){
+        Page<User> page = userMyBatisService.page(new Page<>(currentPage, pageSize), Wrappers.<User>lambdaQuery().like(User::getName, "a"));
+        return Result.ok(page);
     }
 }
