@@ -1,9 +1,6 @@
 package com.course.springboot2.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,7 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 //@TableName("t_user")
 public class User {
-    //@TableId("id1")
+    //@TableId(type = IdType.AUTO)
     private Integer id;
     private String name;
     private Integer age;
@@ -22,8 +19,8 @@ public class User {
     private String email;
     private String managerId;
     private Date createTime;
-    @TableLogic(value = "1", delval = "0")
-    private String isDeleted;
+    //@TableLogic(value = "1", delval = "0")
+    //private String isDeleted;
 
     public User(){}
 }

@@ -9,10 +9,7 @@ import com.course.springboot2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -98,11 +95,26 @@ public class UserController {
         return Result.ok(l);
     }
 
+    // 分页查询 user 信息
     @RequestMapping("/userPage")
     public Result<Page<User>> userPageBySearch(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
                                    @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                    @RequestParam(value = "search", defaultValue = " ") String search){
         Page<User> page = userMyBatisService.page(new Page<>(currentPage, pageSize), Wrappers.<User>lambdaQuery().like(User::getName, "a"));
         return Result.ok(page);
+    }
+
+    // 保存 user 信息
+    @PostMapping("/save")
+    public Result<Boolean> save(User u){
+        boolean t = userMyBatisService.save(u);
+        return Result.ok(t);
+    }
+
+    // 根据 id 删除 user 信息
+    @PostMapping("/deleteById")
+    public Result<Boolean> deleteById(User u){
+        boolean t = userMyBatisService.removeById(u.getId());
+        return Result.ok(t);
     }
 }
