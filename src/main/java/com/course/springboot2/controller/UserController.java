@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.annotation.ElementType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
     @Autowired
@@ -99,15 +100,21 @@ public class UserController {
     @RequestMapping("/userPage")
     public Result<Page<User>> userPageBySearch(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
                                    @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-                                   @RequestParam(value = "search", defaultValue = " ") String search){
-        Page<User> page = userMyBatisService.page(new Page<>(currentPage, pageSize), Wrappers.<User>lambdaQuery().like(User::getName, "a"));
+                                   @RequestParam(value = "search", defaultValue = "") String search){
+        Page<User> page;
+        if (search.replaceAll("", "").equals("")){
+            page = userMyBatisService.page(new Page<>(currentPage, pageSize));
+        } else {
+            page = userMyBatisService.page(new Page<>(currentPage, pageSize), Wrappers.<User>lambdaQuery().like(User::getName, search));
+        }
+
         return Result.ok(page);
     }
 
     // 保存 user 信息
     @PostMapping("/save")
     public Result<Boolean> save(User u){
-        boolean t = userMyBatisService.save(u);
+        boolean t = userMyBatisService.saveOrUpdate(u);
         return Result.ok(t);
     }
 
