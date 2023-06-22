@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.course.springboot2.common.App;
+import com.course.springboot2.common.App1;
+import com.course.springboot2.common.App2;
 import com.course.springboot2.domain.User;
 import com.course.springboot2.mapper.UserMapper;
 import com.course.springboot2.service.UserMyBatisService;
@@ -11,18 +14,27 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 @SpringBootTest
+@EnableAspectJAutoProxy
 class SpringBoot20232ApplicationTests {
     @Autowired
     UserMapper userMapper;
 
     @Autowired
     UserMyBatisService userMyBatisService;
+
+    @Autowired
+    App app;
+    @Autowired
+    App1 app1;
+    @Autowired
+    App2 app2;
 
     // 查询所有用户
     @Test
@@ -240,6 +252,19 @@ class SpringBoot20232ApplicationTests {
         System.out.println("总页数：" + page.getPages());
         System.out.println("是否有上一页：" + page.hasPrevious());
         System.out.println("是否有下一页：" + page.hasNext());
+    }
+    // 测试AOP
+    @Test
+    public void testAop(){
+        app.add();
+    }
+    @Test
+    public void testAop1(){
+        app1.add();
+    }
+    @Test
+    public void testAop2(){
+        app2.add();
     }
 
 }

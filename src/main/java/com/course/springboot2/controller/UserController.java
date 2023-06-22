@@ -39,7 +39,7 @@ public class UserController {
     // 查询 user 表的所有数据
     @RequestMapping("/getAll")
     public Result<List<User>> getAllUsers(){
-        List<User> list = jdbcTemplate.query("select * from user", new RowMapper<User>() {
+        List<User> list = jdbcTemplate.query("select * from t_user", new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                 int id = rs.getInt("id");
@@ -64,21 +64,21 @@ public class UserController {
     // 添加 user
     @RequestMapping("/addUser")
     public Result<Integer> addUser(){
-        int i = jdbcTemplate.update("insert into user(name,age,gender,email) values(?,?,?,?)","zhaoliu",21,"女","123456@gmail.com");
+        int i = jdbcTemplate.update("insert into t_user(name,age,gender,email) values(?,?,?,?)","zhaoliu",21,"女","123456@gmail.com");
         return Result.ok(i);
     }
 
     // 根据 id 删除
     @RequestMapping("/delete")
     public Result<Integer> delUserById(String id){
-        int i = jdbcTemplate.update("delete from user where id = ?", id);
+        int i = jdbcTemplate.update("delete from t_user where id = ?", id);
         return Result.ok(i);
     }
 
     // 根据 id 修改 name
     @RequestMapping("/updateUserById")
     public Result<Integer> updateUserById(String id, @RequestParam("name") String newName){
-        int i = jdbcTemplate.update("update user set name = ? where id = ?", newName, id);
+        int i = jdbcTemplate.update("update t_user set name = ? where id = ?", newName, id);
         return Result.ok(i);
     }
 
