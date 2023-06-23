@@ -56,7 +56,7 @@ class SpringBoot20232ApplicationTests {
     // 根据 id 删除用户
     @Test
     public void delUserById(){
-        userMapper.deleteById(5);
+        userMapper.deleteById(1270951938);
     }
 
     // 根据 id 删除多个用户
