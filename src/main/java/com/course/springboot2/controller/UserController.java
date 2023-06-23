@@ -111,7 +111,7 @@ public class UserController {
         return Result.ok(page);
     }
 
-    // 保存 user 信息
+    // 保存或修改 user 信息
     @PostMapping("/save")
     public Result<Boolean> save(User u){
         boolean t = userMyBatisService.saveOrUpdate(u);
